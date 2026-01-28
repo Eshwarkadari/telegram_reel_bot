@@ -3,10 +3,13 @@ from telethon.tl.functions.messages import GetHistoryRequest
 import asyncio
 import os
 
-# ===== CONFIG =====
+# ========== EDIT THESE ==========
+API_ID = 31096846              # <-- put your api_id (number)
+API_HASH = "b1f3f282dc47585fd5c62eeaed59f142"        # <-- put your api_hash (string)
+CHANNEL = "https://t.me/myreelsource"  # <-- your Telegram channel
+# ================================
+
 BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
-channel = "https://t.me/myreelsource"   # <-- YOUR CHANNEL
-# ==================
 
 STATE_FILE = "state.txt"
 OUTPUT_FILE = "video.mp4"
@@ -25,30 +28,35 @@ async def download_next_video():
     index = read_state()
     print("Current index:", index)
 
-    async with TelegramClient("bot_session", api_id=0, api_hash="", bot_token=BOT_TOKEN) as client:
-        history = await client(GetHistoryRequest(
-            peer=channel,
-            limit=100,
-            offset_date=None,
-            offset_id=0,
-            max_id=0,
-            min_id=0,
-            add_offset=0,
-            hash=0
-        ))
+    client = TelegramClient("bot_session", API_ID, API_HASH)
+    await client.start(bot_token=BOT_TOKEN)
 
-        videos = [msg for msg in history.messages if msg.video]
-        videos = list(reversed(videos))  # oldest → newest
+    history = await client(GetHistoryRequest(
+        peer=CHANNEL,
+        limit=100,
+        offset_date=None,
+        offset_id=0,
+        max_id=0,
+        min_id=0,
+        add_offset=0,
+        hash=0
+    ))
 
-        if index >= len(videos):
-            print("No new videos available.")
-            return
+    videos = [msg for msg in history.messages if msg.video]
+    videos.reverse()  # oldest → newest
 
-        message = videos[index]
-        await message.download_media(file=OUTPUT_FILE)
+    if index >= len(videos):
+        print("No new videos available.")
+        await client.disconnect()
+        return
 
-        print(f"Downloaded video number: {index}")
-        write_state(index + 1)
+    message = videos[index]
+    await message.download_media(file=OUTPUT_FILE)
+
+    print(f"Downloaded video index: {index}")
+    write_state(index + 1)
+
+    await client.disconnect()
 
 if __name__ == "__main__":
     asyncio.run(download_next_video())
