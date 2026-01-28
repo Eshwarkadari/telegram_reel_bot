@@ -24,6 +24,6 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run Telegram queue downloader
         env:
-          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_STRING_SESSION: ${{ secrets.TG_STRING_SESSION }}
         run: python telegram_download.py
 
