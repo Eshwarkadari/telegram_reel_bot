@@ -3,11 +3,10 @@ from telethon.tl.functions.messages import GetHistoryRequest
 import asyncio
 import os
 
-# ========== EDIT HERE ==========
-api_id = 31096846                  # <-- PUT YOUR api_id
-api_hash = "b1f3f282dc47585fd5c62eeaed59f142"       # <-- PUT YOUR api_hash
-channel = "https://t.me/myreelsource"  # <-- YOUR TELEGRAM CHANNEL
-# ===============================
+# ===== CONFIG =====
+BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
+channel = "https://t.me/myreelsource"   # <-- YOUR CHANNEL
+# ==================
 
 STATE_FILE = "state.txt"
 OUTPUT_FILE = "video.mp4"
@@ -26,7 +25,7 @@ async def download_next_video():
     index = read_state()
     print("Current index:", index)
 
-    async with TelegramClient("session", api_id, api_hash) as client:
+    async with TelegramClient("bot_session", api_id=0, api_hash="", bot_token=BOT_TOKEN) as client:
         history = await client(GetHistoryRequest(
             peer=channel,
             limit=100,
@@ -38,11 +37,8 @@ async def download_next_video():
             hash=0
         ))
 
-        # Keep ONLY video messages
         videos = [msg for msg in history.messages if msg.video]
-
-        # Sort from oldest → newest
-        videos = list(reversed(videos))
+        videos = list(reversed(videos))  # oldest → newest
 
         if index >= len(videos):
             print("No new videos available.")
