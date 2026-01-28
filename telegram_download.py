@@ -2,14 +2,19 @@ from telethon import TelegramClient
 from telethon.tl.functions.messages import GetHistoryRequest
 import asyncio
 import os
+import sys
 
 # ========== EDIT THESE ==========
-API_ID = 31096846              # <-- put your api_id (number)
-API_HASH = "b1f3f282dc47585fd5c62eeaed59f142"        # <-- put your api_hash (string)
+API_ID = 31096846                   # <-- your api_id (NUMBER)
+API_HASH = "b1f3f282dc47585fd5c62eeaed59f142"        # <-- your api_hash (STRING)
 CHANNEL = "https://t.me/myreelsource"  # <-- your Telegram channel
 # ================================
 
 BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
+
+if not BOT_TOKEN:
+    print("❌ ERROR: TG_BOT_TOKEN is NOT set in GitHub Secrets")
+    sys.exit(1)
 
 STATE_FILE = "state.txt"
 OUTPUT_FILE = "video.mp4"
