@@ -4,9 +4,9 @@ import asyncio
 import os
 
 # ========== EDIT HERE ==========
-api_id = 12345678                     # <-- PUT YOUR api_id
-api_hash = "YOUR_API_HASH_HERE"       # <-- PUT YOUR api_hash
-channel = "https://t.me/yourchannel"  # <-- YOUR TELEGRAM CHANNEL
+api_id = 31096846                  # <-- PUT YOUR api_id
+api_hash = "b1f3f282dc47585fd5c62eeaed59f142"       # <-- PUT YOUR api_hash
+channel = "https://t.me/myreelsource"  # <-- YOUR TELEGRAM CHANNEL
 # ===============================
 
 STATE_FILE = "state.txt"
